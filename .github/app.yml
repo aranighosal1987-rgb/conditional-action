@@ -1,4 +1,3 @@
-```yaml
 name: Simple Application CI/CD
 
 on:
@@ -38,4 +37,3 @@ jobs:
           echo "All tests passed!"
           echo "Deploying application..."
           echo "Application deployed successfully!"
-```
