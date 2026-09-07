@@ -1,4 +1,4 @@
-```javascript
+
 const { calculateResult } = require("./app");
 
 console.log("Running tests...");
@@ -19,4 +19,3 @@ if (calculateResult(30) !== "FAIL") {
 }
 
 console.log("All tests passed successfully!");
-```
