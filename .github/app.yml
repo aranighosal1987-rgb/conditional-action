@@ -1,0 +1,41 @@
+```yaml
+name: Simple Application CI/CD
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # Step 1 - Checkout source code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2 - Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # Step 3 - Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Step 4 - Run tests
+      - name: Run tests
+        run: npm test
+
+      # Conditional step - Deploy only on main
+      - name: Deploy application
+        if: success() && github.ref == 'refs/heads/main'
+        run: |
+          echo "All tests passed!"
+          echo "Deploying application..."
+          echo "Application deployed successfully!"
+```
