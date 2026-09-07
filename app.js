@@ -1,4 +1,3 @@
-javascript
 // Simple Student Result Application
 
 function calculateResult(marks) {
