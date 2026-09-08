@@ -8,12 +8,15 @@ on:
 
 jobs:
 
-  # Job 1: Build
+  # ==========================================
+  # JOB 1 - BUILD
+  # ==========================================
   build:
+    name: Build Application
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout source code
         uses: actions/checkout@v4
 
       - name: Setup Node.js
@@ -24,13 +27,22 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-  # Job 2: Test
+      - name: Build application
+        run: |
+          echo "Building application..."
+          echo "Build completed successfully!"
+
+
+  # ==========================================
+  # JOB 2 - TEST
+  # ==========================================
   test:
+    name: Test Application
     needs: build
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout source code
         uses: actions/checkout@v4
 
       - name: Setup Node.js
@@ -44,16 +56,48 @@ jobs:
       - name: Run tests
         run: npm test
 
-  # Job 3: Deploy
-  deploy:
+
+  # ==========================================
+  # JOB 3 - CHECK BRANCH
+  # ==========================================
+  check-branch:
+    name: Check Deployment Condition
     needs: test
     runs-on: ubuntu-latest
 
+    steps:
+      - name: Check branch
+        run: |
+          echo "Current branch: ${{ github.ref_name }}"
+
+          if [ "${{ github.ref_name }}" = "main" ]; then
+            echo "Branch is main."
+            echo "Deployment is allowed."
+          else
+            echo "Branch is not main."
+            echo "Deployment will be skipped."
+          fi
+
+
+  # ==========================================
+  # JOB 4 - DEPLOY
+  # ==========================================
+  deploy:
+    name: Deploy Application
+    needs: check-branch
+
+    # Deploy only when:
+    # 1. Previous jobs succeeded
+    # 2. Current branch is main
     if: success() && github.ref == 'refs/heads/main'
+
+    runs-on: ubuntu-latest
 
     steps:
       - name: Deploy application
         run: |
-          echo "All tests passed!"
+          echo "All previous jobs completed successfully!"
+          echo "Branch: ${{ github.ref_name }}"
           echo "Deploying application..."
           echo "Application deployed successfully!"
+
